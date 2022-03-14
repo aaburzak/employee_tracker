@@ -1,0 +1,24 @@
+{
+  "name": "employee_tracker",
+  "version": "1.0.0",
+  "description": "app will utilize MySQL to track and update an employee roster across departments",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaburzak/employee_tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaburzak/employee_tracker/issues"
+  },
+  "homepage": "https://github.com/aaburzak/employee_tracker#readme",
+  "dependencies": {
+    "inquirer": "^8.2.1",
+    "mysql2": "^2.3.3"
+  }
+}
