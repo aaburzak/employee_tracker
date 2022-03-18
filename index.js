@@ -55,3 +55,22 @@ const viewDepartment = () => {
     )
 };
 
+const viewRole = () => {
+    employee_DataBase.query(
+        'SELECT * FROM role;',
+        (err, results) => {
+            console.table(results);
+            menu();
+        }
+    )
+};
+
+const viewEmployee = () => {
+    employee_DataBase.query(
+        'SELECT * FROM employee;',
+        (err, results) => {
+            console.table(results);
+            menu();
+        }
+    )
+};
