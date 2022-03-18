@@ -13,9 +13,9 @@ const employee_DataBase = mysql.createConnection(
     console.log('Connected to employeeDB')
 );
 
-menu ()
+menu ();
 
-function menu(){
+const menu = () => {
     inquirer.prompt([
         {
             name: 'menu',
@@ -43,4 +43,15 @@ function menu(){
             process.exit();
         }
     })
-}
+};
+
+const viewDepartment = () => {
+    employee_DataBase.query(
+        'SELECT * FROM department;',
+        (err, results) => {
+            console.table(results);
+            menu();
+        }
+    )
+};
+
