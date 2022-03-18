@@ -26,11 +26,11 @@ function menu(){
     ])
     .then(({menuChoice}) => {
         if(menuChoice === 'View All Departments' ){
-            selectDepartment()
+            viewDepartment()
         } else if (menuChoice === 'View All Roles'){
-            selectRole()
+            viewRole()
         } else if (menuChoice === 'View All Employees'){
-            selectEmployee()
+            viewEmployee()
         } else if (menuChoice === 'Add A Department'){
             addDepartment()
         } else if (menuChoice === 'Add A Role'){
