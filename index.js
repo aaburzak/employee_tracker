@@ -3,7 +3,7 @@ const fs = require('fs');
 const inquirer = require ('inquirer');
 const mysql = require ('mysql2');
 
-const employee_DataBase = mysql.createConnection(
+const connectDB = mysql.createConnection(
     {
         host: 'localhost',
         user: 'root',
@@ -13,40 +13,32 @@ const employee_DataBase = mysql.createConnection(
     console.log('Connected to employeeDB')
 );
 
-menu ();
-
-const menu = () => {
+function menu(){
     inquirer.prompt([
-        {
-            name: 'menu',
-            type: 'list',
-            message: 'MENU:',
-            choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', 'Quit']
-        }
-    ])
-    .then(({menuChoice}) => {
-        if(menuChoice === 'View All Departments' ){
-            viewDepartment()
-        } else if (menuChoice === 'View All Roles'){
-            viewRole()
-        } else if (menuChoice === 'View All Employees'){
-            viewEmployee()
-        } else if (menuChoice === 'Add A Department'){
-            addDepartment()
-        } else if (menuChoice === 'Add A Role'){
-            addRole()
-        } else if (menuChoice === 'Add An Employee'){
-            addEmployee()
-        } else if (menuChoice === 'Update An Employee Role'){
-            updateRole ()
-        } else {
-            process.exit();
-        }
-    })
-};
+            {
+                type: "list",
+                name: "userMenu",
+                message:"Menu:",
+                choices: [
+                    "View All Departments",
+                    "View All Roles",
+                    "View All Employees"
+                ]
+            },
+        ])
+        .then(({userMenu}) => {
+            if (userMenu === "View All Departments"){
+                viewDepartment()
+            } else if (role === "View All Roles") {
+                viewRole()
+            } else {
+                viewEmployee()
+            }
+        })
+}
 
 const viewDepartment = () => {
-    employee_DataBase.query(
+    connectDB.query(
         'SELECT * FROM department;',
         (err, results) => {
             console.table(results);
@@ -56,7 +48,7 @@ const viewDepartment = () => {
 };
 
 const viewRole = () => {
-    employee_DataBase.query(
+    connectDB.query(
         'SELECT * FROM role;',
         (err, results) => {
             console.table(results);
@@ -66,7 +58,7 @@ const viewRole = () => {
 };
 
 const viewEmployee = () => {
-    employee_DataBase.query(
+    connectDB.query(
         'SELECT * FROM employee;',
         (err, results) => {
             console.table(results);
@@ -74,3 +66,5 @@ const viewEmployee = () => {
         }
     )
 };
+
+menu ();
