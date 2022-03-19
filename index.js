@@ -3,7 +3,7 @@ const fs = require('fs');
 const inquirer = require ('inquirer');
 const mysql = require ('mysql2');
 
-const connectDB = mysql.createConnection(
+const connect = mysql.createConnection(
     {
         host: 'localhost',
         user: 'root',
@@ -13,11 +13,15 @@ const connectDB = mysql.createConnection(
     console.log('Connected to employeeDB')
 );
 
+async function init(){
+    await menu();
+};
+
 function menu(){
     inquirer.prompt([
             {
                 type: "list",
-                name: "userMenu",
+                name: "userChoice",
                 message:"Menu:",
                 choices: [
                     "View All Departments",
@@ -26,8 +30,8 @@ function menu(){
                 ]
             },
         ])
-        .then(({userMenu}) => {
-            if (userMenu === "View All Departments"){
+        .then(({userChoice}) => {
+            if (userChoice === "View All Departments"){
                 viewDepartment()
             } else if (role === "View All Roles") {
                 viewRole()
@@ -38,7 +42,7 @@ function menu(){
 }
 
 const viewDepartment = () => {
-    connectDB.query(
+    connect.query(
         'SELECT * FROM department;',
         (err, results) => {
             console.table(results);
@@ -48,7 +52,7 @@ const viewDepartment = () => {
 };
 
 const viewRole = () => {
-    connectDB.query(
+    connect.query(
         'SELECT * FROM role;',
         (err, results) => {
             console.table(results);
@@ -58,7 +62,7 @@ const viewRole = () => {
 };
 
 const viewEmployee = () => {
-    connectDB.query(
+    connect.query(
         'SELECT * FROM employee;',
         (err, results) => {
             console.table(results);
@@ -67,4 +71,4 @@ const viewEmployee = () => {
     )
 };
 
-menu ();
+init();
