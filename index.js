@@ -29,6 +29,7 @@ function menu() {
           "View All Roles",
           "View All Employees",
           "Add A Department",
+          "Add A Role",
           "Add An Employee",
           "Update An Employee Role",
           "Quit"
@@ -89,6 +90,53 @@ const addDepartment = () => {
         connect.promise().query("INSERT INTO department SET ?", name);
         viewDepartment();
     })
+}
+
+const addRole = () => {
+    return connect.promise().query(
+        "SELECT department.id, department.name FROM department;"
+    )
+        .then(([departments]) => {
+            let departmentChoices = departments.map(({
+                id,
+                name
+            }) => ({
+                name: name,
+                value: id
+            }));
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'title',
+                    message: 'Please enter the title of the new role:'
+                },
+                {
+                    type:'list',
+                    name: 'department',
+                    message:'Which department is the new role in?',
+                    choices: departmentChoices
+                },
+                {
+                    type:'input',
+                    name: 'salary',
+                    message: 'What is the new roles salary?'
+                }
+        ])
+            .then (({title, department, salary}) => {
+                const query = connect.query(
+                    'INSERT INTO role SET ?',
+                    {
+                        title: title,
+                        department_id: department,
+                        salary: salary
+                    },
+                    function (err, res){
+                        if (err) throw err;
+                    }
+                )
+            })
+            .then(() => viewRole())
+        })
 }
 
 init();
