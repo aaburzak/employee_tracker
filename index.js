@@ -3,6 +3,7 @@ const fs = require("fs");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 
+//connects to employee database
 const connect = mysql.createConnection(
   {
     host: "localhost",
@@ -13,10 +14,12 @@ const connect = mysql.createConnection(
   console.log("Connected to employeeDB")
 );
 
+//initiates the application and calls the menu function
 function init() {
   menu();
 }
 
+//displays menu options for user to select then calls on next function based on user selection
 function menu() {
   inquirer
     .prompt([
@@ -59,6 +62,7 @@ function menu() {
     });
 }
 
+//displays all departments
 const viewDepartment = () => {
   connect.query("SELECT * FROM department;", (err, results) => {
     console.table(results);
@@ -66,6 +70,7 @@ const viewDepartment = () => {
   });
 };
 
+//displays all roles and corresponding salaries and departments
 const viewRole = () => {
   connect.query("SELECT role.id AS id, role.title AS title, department.name AS department, role.salary AS salary FROM role JOIN department ON role.department_id = department.id ORDER BY id;", (err, results) => {
     console.table(results);
@@ -73,6 +78,7 @@ const viewRole = () => {
   });
 };
 
+//displays all employees, their respective roles, departments, salaries, managers and ids
 const viewEmployee = () => {
   connect.query("SELECT E.id AS id, E.first_name AS first_name, E.last_name AS last_name, role.title AS title, department.name AS department, role.salary AS salary, CONCAT(M.first_name, ' ', M.last_name) AS manager FROM employee E LEFT JOIN role ON E.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee M ON E.manager_id = M.id;  ", (err, results) => {
     console.table(results);
@@ -80,6 +86,7 @@ const viewEmployee = () => {
   });
 };
 
+//allows the user to add a new department to the database
 const addDepartment = () => {
     inquirer.prompt([{
         type: 'input',
@@ -92,6 +99,7 @@ const addDepartment = () => {
     })
 }
 
+//allows the user to add a new role to the database
 const addRole = () => {
     return connect.promise().query(
         "SELECT department.id, department.name FROM department;"
@@ -139,6 +147,7 @@ const addRole = () => {
         })
 }
 
+//allows the user to add an employee to the database
 const addEmployee = (roles) => {
     return connect.promise().query(
         'SELECT id, title FROM role;'
@@ -208,6 +217,7 @@ const addEmployee = (roles) => {
         })
 }
 
+//allows the user to edit a role within the database
 const updateRole = () => {
     return connect.promise().query(
         'SELECT id, title FROM role;'
