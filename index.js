@@ -46,6 +46,8 @@ function menu() {
         viewEmployee();
       } else if (userChoice === "Add A Department"){
         addDepartment();
+      } else if (userChoice === "Add A Role"){
+        addRole();
       } else if (userChoice === "Add An Employee"){
         addEmployee();
       } else if (userChoice === "Update An Employee Role"){
@@ -76,5 +78,17 @@ const viewEmployee = () => {
     menu();
   });
 };
+
+const addDepartment = () => {
+    inquirer.prompt([{
+        type: 'input',
+        name: 'name',
+        message: 'Please enter the name of the new department:'
+    }])
+    .then (name => {
+        connect.promise().query("INSERT INTO department SET ?", name);
+        viewDepartment();
+    })
+}
 
 init();
