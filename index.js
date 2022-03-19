@@ -139,4 +139,73 @@ const addRole = () => {
         })
 }
 
+const addEmployee = (roles) => {
+    return connect.promise().query(
+        'SELECT id, title FROM role;'
+    )
+        .then(([employees]) => {
+            let titleChoices = employees.map(({
+                id,
+                title
+            }) => ({
+                value: id,
+                name: title
+            }))
+            connect.promise().query(
+                "SELECT M.id, CONCAT(M.first_name, ' ',M.last_name) AS manager FROM employee M;"
+            )
+            .then(([managers]) => {
+                let managerChoices = managers.map(({
+                    id,
+                    manager
+                }) => ({
+                    value: id,
+                    name: manager
+                }));
+                inquirer.prompt(
+                    [
+                        {
+                            type: 'input',
+                            name: 'firstName',
+                            message: "Please enter the new employee's first name:"
+                        },
+                        {
+                            type: 'input',
+                            name: 'lastName',
+                            message: "Please enter the new employee's last name:"
+                        },
+                        {
+                            type:'list',
+                            name: 'role',
+                            message: "Please select the new employee's role:",
+                            choices: titleChoices
+                        },
+                        {
+                            type: 'list',
+                            name: 'manager',
+                            message: "Please select the employee's manager:",
+                            choices: managerChoices
+                        }
+                    ]
+                )
+                .then(({firstName, lastName, role, manager}) => {
+                    const query = connect.query(
+                        'INSERT INTO employee SET ?',
+                        {
+                            first_name: firstName,
+                            last_name: lastName,
+                            role_id: role,
+                            manager_id: manager
+                        },
+                        function (err, res){
+                            if (err) throw err;
+                            console.log({ role, manager})
+                        }
+                    )
+                })
+                .then(() => viewEmployee())
+            })
+        })
+}
+
 init();
