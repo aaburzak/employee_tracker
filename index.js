@@ -1,5 +1,5 @@
 require('console.table');
-const fs = require('fs');
+// const fs = require('fs');
 const inquirer = require ('inquirer');
 const mysql = require ('mysql2');
 
@@ -13,12 +13,12 @@ const connect = mysql.createConnection(
     console.log('Connected to employeeDB')
 );
 
-async function init(){
-    await menu();
+function init(){
+    menu();
 };
 
-function menu(){
-    inquirer.prompt([
+async function menu(){
+    await inquirer.prompt([
             {
                 type: "list",
                 name: "userChoice",
