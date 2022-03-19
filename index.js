@@ -208,4 +208,61 @@ const addEmployee = (roles) => {
         })
 }
 
+const updateRole = () => {
+    return connect.promise().query(
+        'SELECT id, title FROM role;'
+    )
+    .then(([roles]) => {
+        let roleChoices = roles.map(({
+            id,
+            title
+        }) => (
+            {
+                value: id,
+                name: title
+            }
+        ));
+        inquirer.prompt(
+            [
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: 'Please select a role to update:',
+                    choices: roleChoices
+                }
+            ]
+        )
+        .then(role => {
+            inquirer.prompt(
+                [
+                    {
+                        type: 'input',
+                        name: 'title',
+                        message: "Please enter the updated title of the role",
+                    },
+                    {
+                        type: 'input',
+                        name: 'salary',
+                        message: 'Please enter the updated salary of the role'
+                    }
+                ]
+            )
+            .then(({ title, salary }) => {
+                const query = connect.query(
+                    'UPDATE role SET title = ?, salary = ? WHERE id = ?',
+                    [
+                        title,
+                        salary,
+                        role.role
+                    ],
+                    function (err, res) {
+                        if (err) throw err;
+                    }
+                )
+            })
+            .then (() => viewRole())
+        })
+    })
+}
+
 init();
